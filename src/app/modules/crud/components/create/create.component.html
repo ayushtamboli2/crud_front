@@ -1,0 +1,31 @@
+<mat-card>
+    <form [formGroup]="formData">
+    <!-- Name -->
+    <mat-form-field appearance="outline" style="width: 50%">
+        <mat-label>Name</mat-label>
+        <input type="text" matInput formControlName="name">
+    </mat-form-field>
+
+    <br>
+    <!-- Email -->
+    <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email">
+    </mat-form-field>
+
+    <br>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" style="width: 50%">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+    </mat-form-field>
+
+    <br>
+    <!-- Button -->
+    <button mat-raised-button *ngIf="!storeId" color="primary" (click)="submit()">Submit</button>
+    <button mat-raised-button *ngIf="storeId" color="primary" (click)="updateTableData(storeId)">Update</button>
+</form>
+<br>
+{{message}}  <!-- Interpolation -->
+</mat-card>

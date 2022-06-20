@@ -1,0 +1,228 @@
+CRUD Angular APP (For frontend setup):-
+
+Step:1  Create new angular project
+
+command---> ng new project_name;
+
+	example:- ng new CRUD
+
+step:2 Make Module folder in app folder
+
+
+step:3 Create module with routing for our sub-components
+
+command---> ng generate module module_name --routing
+	
+	example:- ng generate module modules/crud --routing
+
+
+Step:4 Generate read component under modules/crud/components folder
+
+command---> ng generate component modules/crud/components/read
+
+
+Step:5 Generate create component under modules/crud/components folder
+
+command---> ng generate component modules/crud/components/create
+
+<--------------here module and component setup completed for CRUD------------------>
+
+
+
+
+Routing Setup:-
+
+Step:6  set <router-outlet></router-outlet> in app.component.html
+
+Step:7 set path in app.component.ts with lazyloading technique
+
+{path:'crud', loadChildren:()=>import('./modules/crud/crud.module').then(m=>m.CrudModule)}
+
+Step:8 set path in crud-routing.module.ts
+
+{path:'read',component: ReadComponent},
+{path:'create', component: CreateComponent}
+
+<--------------Routing setup completed------------------>
+
+
+Angular Material Setup:-
+
+Step:9 add angular material in project through command
+
+command---> ng add @angular/material
+
+
+Step:10 Set up browser animations for Angular Material
+
+Importing the BrowserAnimationsModule(app.module.ts) into your application enables Angular's animation system. 
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+imports:[BrowserAnimationsModule]
+
+
+Step:11 Set seprate material module for angular material (we can use this module whenever need)
+
+command---> ng generate module material/material
+
+Step:12 Setup material module, import angular materials as per need
+
+import {MatToolbarModule} from '@angular/material/toolbar'; //for header toolbar
+import {MatCardModule} from '@angular/material/card'; //Mat Card Background
+import {MatIconModule} from '@angular/material/icon'; //for icons
+import {MatButtonModule} from '@angular/material/button'; // for buttons
+import {MatFormFieldModule} from '@angular/material/form-field'; //Form
+import {MatInputModule} from '@angular/material/input'; //Input
+import {MatTableModule} from '@angular/material/table'; //Data Table
+
+
+Step:13 import this material module in main module (app.module.ts)
+
+import { MaterialModule } from './material/material/material.module'; //material
+
+
+Step:14 import this material module under sub-modules (crud-module.ts)
+
+import { MaterialModule } from 'src/app/material/material/material.module';
+
+
+Step:15 setup for Mat Toolbar in app.component.html
+
+<mat-toolbar color="primary">
+	<a mat-icon-button class="example-icon favorite-icon" routerLink="crud/read">Read</a>
+ 	<a mat-icon-button class="example-icon" routerLink="crud/create">Create</a>
+</mat-toolbar>
+
+
+Step:16 setup Angular Form
+
+	import in app.module.ts :-
+	import { ReactiveFormsModule } from '@angular/forms'; //Form
+
+
+Step:17 setup Angular Form in sub-module
+
+	import in crud.module.ts :-
+	import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+Step:18 setup for create component ( for using formGroup, FormBuilder)
+
+	In create.component.ts file :-
+	import { FormBuilder, FormGroup } from '@angular/forms';
+	
+	constructor(private formBuilder : FormBuilder)
+
+Step:19 setup FormGroup
+
+	formData: FormGroup = this.formBuilder.group({
+    	name: [''],
+   	 email: [''],
+   	 password: ['']
+  })
+
+Step:20 create a function for submit 
+	
+	submit(){console.log(this.formData.value)}
+
+
+Step:21 create.component.html setup design with material
+
+<mat-card>
+
+    <form [formGroup]="formData" (ngSubmit)="submit()">
+
+    <!-- Name -->
+    <mat-form-field appearance="outline" style="width: 50%">
+        <mat-label>Name</mat-label>
+        <input type="text" matInput formControlName="name">
+    </mat-form-field>
+    <br>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email">
+    </mat-form-field>
+    <br>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" style="width: 50%">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+    </mat-form-field>
+
+    <br>
+    <!-- Button -->
+    <button mat-raised-button color="primary">Submit</button>
+</form>
+
+</mat-card>
+
+
+Note: formControlName should be same name as decleard in ts file.
+
+
+Step:21 Create Service for communicating with backend
+
+command---> ng g service common
+
+
+Step:22 Import Http Client Module in app.module.ts
+
+import { HttpClientModule } from '@angular/common/http';
+
+
+Step:23 import HttpClient in common service for call
+
+import { HttpClient } from '@angular/common/http';
+
+constructor(private http: HttpClient) { }
+
+
+Step:24 Create post method in common service
+
+  postFunction(functionName: any, data:any){
+    return this.http.get(environment.rootUrl + functionName, data).pipe(tap(res => {res}), catchError(e=>{
+      throw new Error(e)
+    }))
+  }
+
+
+Step:25 Create a function in create.component.html
+
+import { CommonService } from './../../../../common.service';
+
+ constructor(private common: CommonService) { }
+
+
+Function:-
+
+ message:any; //variable for message print
+
+  // submit data
+  submit(){
+    console.log(this.formData.value)
+    this.common.postFunction('URL...', this.formData.value).subscribe((res:any)=>{
+
+      if(res){
+        console.log(res)
+        this.message = "Data Submitted Successfuly"
+      }else{
+        console.log("Not getting any response")
+        this.message = "Not getting any response"
+      }
+    })
+  }
+
+
+<---------------------------Now Create component front-end part completed -------------------------->
+
+
+
+
+
+
+
+
